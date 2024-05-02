@@ -23,12 +23,22 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
+    
+    const collection = client.db("artsDB").collection("arts"); 
+
+    app.post('/addArts', async(req ,res)=>{
+      console.log(req.body);
+      const result = await  collection.insertOne(req.body);
+      res.send(result)
+    })
+
     await client.db("admin").command({ ping: 1 });
+
+
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
@@ -43,4 +53,5 @@ app.listen(port ,()=>{
 })
 
 
-
+ 
+// https://i.ibb.co/55Y13NV/oil-paintings-landscape-river-trees-260nw-732930142.webp
