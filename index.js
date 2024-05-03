@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 app.use(cors());
 app.use(express.json());
@@ -37,9 +37,14 @@ async function run() {
       const result = await collection.insertOne(req.body);
       res.send(result)
     })
+
     app.delete('/addArts/:id', async (req, res) => {
-      console.log(req.params.id);
+      const id =  req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await collection.deleteOne(query)
+      res.send(result)
     })
+
     app.get("/addArts/:email", async (req, res) => {
       console.log(req.params.email);
       const result = await collection.find({ authEmail: req.params.email }).toArray();
