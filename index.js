@@ -38,6 +38,12 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/addArts/:id', async (req, res) => {
+      const id =  req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await collection.findOne(query)
+      res.send(result)
+    })
     app.delete('/addArts/:id', async (req, res) => {
       const id =  req.params.id;
       const query = {_id: new ObjectId(id)}
