@@ -8,7 +8,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER }:${process.env.DB_PASSWORD}@cluster0.vmk1mwc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.vmk1mwc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -23,13 +23,26 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    
-    const collection = client.db("artsDB").collection("arts"); 
 
-    app.post('/addArts', async(req ,res)=>{
-      console.log(req.body);
-      const result = await  collection.insertOne(req.body);
+    const collection = client.db("artsDB").collection("arts");
+
+    app.get('/addArts', async (req, res) => {
+      const coursor = collection.find()
+      const result = await coursor.toArray()
       res.send(result)
+    })
+
+    app.post('/addArts', async (req, res) => {
+      console.log(req.body);
+      const result = await collection.insertOne(req.body);
+      res.send(result)
+    })
+
+    app.get("/addArts/:email", async (req, res) => {
+     console.log(req.params.email);
+     const result = await collection.find({authEmail : req.params.email}).toArray();
+     res.send(result)
+     console.log(result);
     })
 
     await client.db("admin").command({ ping: 1 });
@@ -44,14 +57,14 @@ async function run() {
 run().catch(console.dir);
 
 
-app.get('/', (req, res)=>{
-    res.send('SIMPLE ARTS IS RANNING');
+app.get('/', (req, res) => {
+  res.send('SIMPLE ARTS IS RANNING');
 })
 
-app.listen(port ,()=>{
-    console.log(`PORT IS RANNIN ${port}`);
+app.listen(port, () => {
+  console.log(`PORT IS RANNIN ${port}`);
 })
 
 
- 
+
 // https://i.ibb.co/55Y13NV/oil-paintings-landscape-river-trees-260nw-732930142.webp
