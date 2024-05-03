@@ -37,12 +37,14 @@ async function run() {
       const result = await collection.insertOne(req.body);
       res.send(result)
     })
-
+    app.delete('/addArts/:id', async (req, res) => {
+      console.log(req.params.id);
+    })
     app.get("/addArts/:email", async (req, res) => {
-     console.log(req.params.email);
-     const result = await collection.find({authEmail : req.params.email}).toArray();
-     res.send(result)
-     console.log(result);
+      console.log(req.params.email);
+      const result = await collection.find({ authEmail: req.params.email }).toArray();
+      res.send(result)
+      console.log(result);
     })
 
     await client.db("admin").command({ ping: 1 });
