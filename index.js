@@ -38,12 +38,8 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/addArts/:id', async (req, res) => {
-      const id =  req.params.id;
-      const query = {_id: new ObjectId(id)}
-      const result = await collection.findOne(query)
-      res.send(result)
-    })
+ 
+    
     app.delete('/addArts/:id', async (req, res) => {
       const id =  req.params.id;
       const query = {_id: new ObjectId(id)}
@@ -56,6 +52,13 @@ async function run() {
       const result = await collection.find({ authEmail: req.params.email }).toArray();
       res.send(result)
       console.log(result);
+    })
+
+    app.get('/addArts/singel/:id', async (req, res) => {
+      const id =  req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await collection.findOne(query)
+      res.send(result)
     })
 
     await client.db("admin").command({ ping: 1 });
