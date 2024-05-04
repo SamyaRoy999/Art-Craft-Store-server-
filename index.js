@@ -37,14 +37,18 @@ async function run() {
       const result = await collection.insertOne(req.body);
       res.send(result)
     })
-
- 
     
     app.delete('/addArts/:id', async (req, res) => {
       const id =  req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await collection.deleteOne(query)
       res.send(result)
+    })
+
+    app.put('/addArts/:id', async (req, res) => {
+      const id =  req.params.id;
+      const update = req.body
+      console.log(update);
     })
 
     app.get("/addArts/:email", async (req, res) => {
@@ -83,4 +87,3 @@ app.listen(port, () => {
 
 
 
-// https://i.ibb.co/55Y13NV/oil-paintings-landscape-river-trees-260nw-732930142.webp
