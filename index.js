@@ -25,10 +25,17 @@ async function run() {
     await client.connect();
 
     const collection = client.db("artsDB").collection("arts");
+    const collectionSub = client.db("artsDB").collection("subcategoryArt");
 
     app.get('/addArts', async (req, res) => {
       const coursor = collection.find()
       const result = await coursor.toArray()
+      res.send(result)
+    })
+    app.get('/subcategoryArt', async (req, res) => {
+      const coursor = collectionSub.find()
+      const result = await coursor.toArray()
+      console.log(result);
       res.send(result)
     })
 
@@ -37,30 +44,47 @@ async function run() {
       const result = await collection.insertOne(req.body);
       res.send(result)
     })
-    
+
     app.delete('/addArts/:id', async (req, res) => {
-      const id =  req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
       const result = await collection.deleteOne(query)
       res.send(result)
     })
 
     app.put('/addArts/:id', async (req, res) => {
-      const id =  req.params.id;
-      const update = req.body
+      const id = req.params.id;
+      const update = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+      const updateArts = {
+        $set: {
+          customization: update.customization,
+          imageURL: update.imageURL,
+          name: update.name,
+          price: update.price,
+          processingTime: update.processingTime,
+          rating: update.rating,
+          shortDescription: update.shortDescription,
+          stockStatus: update.stockStatus,
+          subcategoryName: update.subcategoryName,
+        }
+      }
+      const result = await collection.updateOne(filter, updateArts, option);
+      res.send(result)
       console.log(update);
     })
 
     app.get("/addArts/:email", async (req, res) => {
       console.log(req.params.email);
-      const result = await collection.find({ authEmail: req.params.email }).toArray();
+      const result = await collection.find({ UserEmail: req.params.email }).toArray();
       res.send(result)
       console.log(result);
     })
 
     app.get('/addArts/singel/:id', async (req, res) => {
-      const id =  req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
       const result = await collection.findOne(query)
       res.send(result)
     })
